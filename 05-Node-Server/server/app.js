@@ -1,4 +1,4 @@
-require("dotven").config();
+require("dotenv").config();
 let express =  require('express');
 let app = express();
 // ***** ADD LINE BELOW
@@ -9,14 +9,22 @@ let user = require('./controllers/usercontroller');
 //***** Add 2 lines below *****
 sequelize.sync();
 //sequelize.sync({force: true})
-
-// **** ADD LIUNE BELOW
+app.use(require('./middleware/headers'));
 
 app.use(express.json());
 
-app.use('/journal', journal);
-app.use('/user', user);
+/*********
+ * Exposed route
+ */
+ app.use('/user', user);
 
-app.listen(3005, function() {
-    console.log("App is listening on port 3005");
-})
+ /*******
+  * Protected Route
+  */
+ //app.use(require('./middleware/validate.session'));
+app.use('/journal', journal);
+
+
+app.listen(3007, function() {
+    console.log("App is listening on port 3007");
+});
